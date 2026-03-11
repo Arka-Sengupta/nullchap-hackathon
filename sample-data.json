@@ -1,0 +1,13 @@
+{
+  "batch_id": "T025",
+  "process_data": [
+    { "time":0,"temperature":60,"pressure":1.1,"motor_speed":130},
+    { "time":1,"temperature":65,"pressure":1.2,"motor_speed":135},
+    { "time":2,"temperature":70,"pressure":1.25,"motor_speed":138}
+  ],
+  "production_data": {
+    "binder":0.8,
+    "drying_temperature":70,
+    "compression_force":15
+  }
+}
