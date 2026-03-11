@@ -99,7 +99,12 @@ def run_ml_inference(data: dict) -> dict:
         "sensor_json": sensor_data if sensor_data else None
     }
     
-    response = requests.post(API_URL, json=payload)
+    headers = {
+        "ngrok-skip-browser-warning": "true",
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(API_URL, json=payload, headers=headers)
     
     if response.status_code != 200:
         raise Exception(f"ML API Error: {response.text}")
