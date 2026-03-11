@@ -1,42 +1,71 @@
 #root {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+:root {
+  --medical-primary: #00d4ff;
+  --medical-secondary: #7b2cbf;
+  --medical-accent: #ff6b6b;
+  --medical-success: #00b894;
+  --medical-warning: #fdcb6e;
+  --medical-dark: #1a1b2f;
+  --medical-darker: #0f1023;
+  --medical-card: rgba(26, 27, 47, 0.8);
+  --medical-glow: rgba(0, 212, 255, 0.4);
+  --medical-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+body {
+  background: linear-gradient(135deg, #0f1023 0%, #1a1b2f 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--medical-primary), var(--medical-secondary));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--medical-secondary), var(--medical-primary));
+}
+
+/* Glowing animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+@keyframes scan {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

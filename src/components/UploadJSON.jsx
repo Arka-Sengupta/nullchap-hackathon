@@ -6,6 +6,7 @@ export default function UploadJSON() {
   const { setFormDataPayload } = useContext(DataContext);
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
+  const [activeSection, setActiveSection] = useState(1);
 
   const [formData, setFormData] = useState({
     batch_id: "",
@@ -44,108 +45,222 @@ export default function UploadJSON() {
     });
 
     setFormDataPayload(payload);
-    // Proceed to dashboard automatically
     navigate("/dashboard");
   };
 
+  const sections = [
+    { id: 1, name: "Machine Settings", icon: "⚙️" },
+    { id: 2, name: "Material Properties", icon: "🧪" },
+    { id: 3, name: "Environmental", icon: "🌡️" },
+    { id: 4, name: "Sensor Data", icon: "📊" },
+  ];
+
   return (
-    <div className="text-left w-full max-w-4xl mx-auto">
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Configure Batch Analysis</h2>
-        <p className="text-gray-600 mb-6">Enter machine settings, lab inputs, and upload the sensor dataset.</p>
+    <div className="w-full">
+      {/* Progress Steps - Nice orientation */}
+      <div className="flex justify-between mb-12">
+        {sections.map((section) => (
+          <div key={section.id} className="flex items-center flex-1 last:flex-none">
+            <div className="relative">
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 cursor-pointer
+                  ${activeSection >= section.id 
+                    ? 'border-black bg-black text-white' 
+                    : 'border-gray-200 bg-white text-gray-400'}`}
+                onClick={() => setActiveSection(section.id)}
+              >
+                <span className="text-lg">{section.icon}</span>
+              </div>
+              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                <span className={`text-xs ${activeSection >= section.id ? 'text-black font-medium' : 'text-gray-400'}`}>
+                  {section.name}
+                </span>
+              </div>
+            </div>
+            {section.id < sections.length && (
+              <div className={`flex-1 h-0.5 mx-4 transition-colors duration-300 ${activeSection > section.id ? 'bg-black' : 'bg-gray-200'}`}></div>
+            )}
+          </div>
+        ))}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Section 1: Machine Settings */}
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-          <h3 className="text-xl font-semibold mb-4 text-indigo-700 border-b pb-2">🏭 Section 1 - Machine Settings</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Batch ID</label>
-              <input type="text" name="batch_id" required value={formData.batch_id} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" placeholder="e.g. BATCH-001" />
+        <div className={activeSection === 1 ? 'block' : 'hidden'}>
+          <div className="bg-gray-50 p-8 rounded-xl border border-gray-200">
+            <h3 className="text-lg font-medium mb-6 text-gray-900">Machine Settings</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { label: "Batch ID", name: "batch_id", type: "text", placeholder: "BATCH-001" },
+                { label: "Granulation Time (min)", name: "granulation_time", type: "number" },
+                { label: "Machine Speed (RPM)", name: "machine_speed", type: "number" },
+                { label: "Compression Force (kN)", name: "compression_force", type: "number" },
+                { label: "Drying Temp (°C)", name: "drying_temp", type: "number" },
+                { label: "Drying Time (min)", name: "drying_time", type: "number" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm text-gray-600 mb-2">
+                    {field.label}
+                  </label>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    required={field.name === "batch_id"}
+                    value={formData[field.name]}
+                    onChange={handleChange}
+                    placeholder={field.placeholder}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-400 transition-colors"
+                  />
+                </div>
+              ))}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Granulation Time (mins)</label>
-              <input type="number" step="any" name="granulation_time" required value={formData.granulation_time} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Machine Speed (RPM)</label>
-              <input type="number" step="any" name="machine_speed" required value={formData.machine_speed} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Compression Force (kN)</label>
-              <input type="number" step="any" name="compression_force" required value={formData.compression_force} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Drying Temp (°C)</label>
-              <input type="number" step="any" name="drying_temp" required value={formData.drying_temp} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Drying Time (mins)</label>
-              <input type="number" step="any" name="drying_time" required value={formData.drying_time} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 p-2 border" />
-            </div>
+          </div>
+          <div className="flex justify-end mt-6">
+            <button
+              type="button"
+              onClick={() => setActiveSection(2)}
+              className="px-8 py-3 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+            >
+              Next Step →
+            </button>
           </div>
         </div>
 
-        {/* Section 2: Material/Recipe inputs */}
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-          <h3 className="text-xl font-semibold mb-4 text-emerald-700 border-b pb-2">🧪 Section 2 - Material / Lab Inputs</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Binder Amount (g)</label>
-              <input type="number" step="any" name="binder_amount" required value={formData.binder_amount} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 p-2 border" />
+        {/* Section 2: Material Properties */}
+        <div className={activeSection === 2 ? 'block' : 'hidden'}>
+          <div className="bg-gray-50 p-8 rounded-xl border border-gray-200">
+            <h3 className="text-lg font-medium mb-6 text-gray-900">Material Properties</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { label: "Binder Amount (g)", name: "binder_amount" },
+                { label: "Lubricant Conc (%)", name: "lubricant_conc" },
+                { label: "Tablet Weight (mg)", name: "tablet_weight" },
+                { label: "Moisture Content (%)", name: "moisture_content" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm text-gray-600 mb-2">
+                    {field.label}
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    name={field.name}
+                    required
+                    value={formData[field.name]}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-400 transition-colors"
+                  />
+                </div>
+              ))}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Lubricant Conc (%)</label>
-              <input type="number" step="any" name="lubricant_conc" required value={formData.lubricant_conc} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Tablet Weight (mg)</label>
-              <input type="number" step="any" name="tablet_weight" required value={formData.tablet_weight} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 p-2 border" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Moisture Content (%)</label>
-              <input type="number" step="any" name="moisture_content" required value={formData.moisture_content} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 p-2 border" />
-            </div>
+          </div>
+          <div className="flex justify-between mt-6">
+            <button
+              type="button"
+              onClick={() => setActiveSection(1)}
+              className="px-8 py-3 border border-gray-200 text-sm rounded-full hover:border-gray-400 transition-colors"
+            >
+              ← Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection(3)}
+              className="px-8 py-3 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+            >
+              Next Step →
+            </button>
           </div>
         </div>
 
-        {/* Section 3: Environment Data */}
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-          <h3 className="text-xl font-semibold mb-4 text-amber-700 border-b pb-2">🌡️ Section 3 - Environment</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Room Temperature (°C)</label>
-              <input type="number" step="any" name="room_temperature" required value={formData.room_temperature} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 p-2 border" />
+        {/* Section 3: Environmental */}
+        <div className={activeSection === 3 ? 'block' : 'hidden'}>
+          <div className="bg-gray-50 p-8 rounded-xl border border-gray-200">
+            <h3 className="text-lg font-medium mb-6 text-gray-900">Environmental Conditions</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { label: "Room Temperature (°C)", name: "room_temperature" },
+                { label: "Room Humidity (%)", name: "room_humidity" },
+              ].map((field) => (
+                <div key={field.name}>
+                  <label className="block text-sm text-gray-600 mb-2">
+                    {field.label}
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    name={field.name}
+                    required
+                    value={formData[field.name]}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-gray-400 transition-colors"
+                  />
+                </div>
+              ))}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Room Humidity (%)</label>
-              <input type="number" step="any" name="room_humidity" required value={formData.room_humidity} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 p-2 border" />
-            </div>
+          </div>
+          <div className="flex justify-between mt-6">
+            <button
+              type="button"
+              onClick={() => setActiveSection(2)}
+              className="px-8 py-3 border border-gray-200 text-sm rounded-full hover:border-gray-400 transition-colors"
+            >
+              ← Previous
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSection(4)}
+              className="px-8 py-3 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+            >
+              Next Step →
+            </button>
           </div>
         </div>
 
-        {/* Section 4: JSON File Upload */}
-        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 text-center">
-          <h3 className="text-xl font-semibold mb-4 text-blue-800">📊 Sensor Data Upload</h3>
-          <div className="relative">
-            <input type="file" accept=".json" onChange={handleFileChange} className="hidden" id="file-upload" />
-            <label htmlFor="file-upload" className="cursor-pointer inline-flex items-center px-6 py-3 border-2 border-dashed border-blue-400 rounded-lg hover:border-blue-500 transition-colors duration-200 bg-white hover:bg-blue-100">
-              <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span className="text-blue-700 font-medium">{file ? file.name : "Choose JSON Sensor File"}</span>
-            </label>
+        {/* Section 4: Sensor Data Upload */}
+        <div className={activeSection === 4 ? 'block' : 'hidden'}>
+          <div className="bg-gray-50 p-8 rounded-xl border border-gray-200 text-center">
+            <h3 className="text-lg font-medium mb-6 text-gray-900">Upload Sensor Data</h3>
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 bg-white">
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-upload"
+              />
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer block"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                  <svg className="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                </div>
+                <p className="text-gray-900 mb-2 font-medium">
+                  {file ? file.name : "Click to upload JSON file"}
+                </p>
+                <p className="text-sm text-gray-400">
+                  {file ? `${(file.size / 1024).toFixed(2)} KB` : "JSON format only"}
+                </p>
+              </label>
+            </div>
           </div>
-        </div>
-
-        <div className="text-center pt-4">
-          <button type="submit" className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-indigo-600 text-white font-bold text-lg rounded-xl hover:bg-indigo-700 transition-all duration-200 shadow-xl hover:shadow-2xl">
-            Submit & Proceed to Dashboard
-            <svg className="ml-2 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
+          <div className="flex justify-between mt-6">
+            <button
+              type="button"
+              onClick={() => setActiveSection(3)}
+              className="px-8 py-3 border border-gray-200 text-sm rounded-full hover:border-gray-400 transition-colors"
+            >
+              ← Previous
+            </button>
+            <button
+              type="submit"
+              className="px-8 py-3 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors"
+            >
+              Analyze Batch →
+            </button>
+          </div>
         </div>
       </form>
     </div>

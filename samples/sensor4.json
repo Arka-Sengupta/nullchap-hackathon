@@ -1,0 +1,28 @@
+{
+  "temperature_sensors": {
+    "Temperature_C_mean": 40.1,
+    "Temperature_C_max": 72.4,
+    "Temperature_C_min": 26.0,
+    "Temperature_C_std": 13.0
+  },
+  "pressure_sensors": {
+    "Pressure_Bar_mean": 1.12
+  },
+  "motor_sensors": {
+    "Motor_Speed_RPM_max": 925.0
+  },
+  "compression_sensors": {
+    "Compression_Force_kN_max": 16.2
+  },
+  "flow_sensors": {
+    "Flow_Rate_LPM_mean": 2.3
+  },
+  "power_sensors": {
+    "Power_Consumption_kW_max": 67.8
+  },
+  "vibration_sensors": {
+    "Vibration_mm_s_mean": 3.5,
+    "Vibration_mm_s_max": 10.1,
+    "Vibration_mm_s_std": 2.4
+  }
+}

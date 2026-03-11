@@ -1,30 +1,40 @@
 import UploadJSON from "../components/UploadJSON";
 import { Link } from "react-router-dom";
 
-export default function Home(){
+export default function Home() {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Simple Navigation */}
+      <nav className="border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <Link to="/" className="text-2xl font-light tracking-tight">
+            BATCH<span className="font-semibold">AI</span>
+          </Link>
+          <Link 
+            to="/"
+            className="text-sm text-gray-500 hover:text-black transition-colors"
+          >
+            ← Back
+          </Link>
+        </div>
+      </nav>
 
- return(
-  <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-light mb-4">
+            Configure <span className="font-semibold">Your Batch</span>
+          </h1>
+          <p className="text-gray-500 text-lg">
+            Enter your parameters and upload sensor data to get AI-powered insights
+          </p>
+        </div>
 
-    <div className="max-w-4xl mx-auto">
-      
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-gray-900 mb-4">
-          Batch AI Optimization
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          Transform your manufacturing process with AI-powered predictions and recommendations
-        </p>
+        {/* Form Card with the step-by-step style */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+          <UploadJSON />
+        </div>
       </div>
-
-      <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-        <UploadJSON/>
-      </div>
-
     </div>
-
-  </div>
-
- );
-
+  );
 }
